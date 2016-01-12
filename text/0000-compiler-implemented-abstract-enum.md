@@ -15,8 +15,8 @@ type implements designated traits otherwise it raises compiling error.
 [motivation]: #motivation
 
 This is another proposal to sovle the same problem that
-<https://github.com/rust-lang/rfcs/pull/105> and
-<https://github.com/rust-lang/rfcs/pull/1305> deal with.
+[RFC #105](https://github.com/rust-lang/rfcs/pull/105) and
+[RFC #1305](https://github.com/rust-lang/rfcs/pull/1305) deal with.
 
 This proposal tries to solve the problem using syntax and concepts we are
 already familiar with.
@@ -119,7 +119,7 @@ type Foo = <gemsymA>::Foo;
 
 Let's see other use cases:
 ```rust
-#[derive(Iterator<char>)]
+#[derive(Iterator::<Item=char>)]
 enum Stream<'a>;
 
 fn new_stream<'a>(s: &'a str) -> Stream {
@@ -158,17 +158,33 @@ fn new_stream<'a>(s: &'a str) -> Stream<'a> {
 }
 ```
 
+As shown above compiler need to generate some lifetime parameters to generate
+desired abstract enum.
+
+We reject all traits that have associated functions on themselves or traits in
+the inherit chain to be auto-derived.
+
 # Drawbacks
 [drawbacks]: #drawbacks
 
-This proposal adds new syntax like new use case of auto-deriving, hacky enum-like type
+This proposal adds new syntax like new use case of auto-deriving, hacky
+enum-like type and cannot deal with traits that have associated functions on
+themselves or traits in the inherit chain.
+
+It may also cause future incompatibility issues.
+
+Another big issue here is that it might still feel pain to return iterators
+using this proposal. 
 
 # Alternatives
 [alternatives]: #alternatives
 
-What other designs have been considered? What is the impact of not doing this?
+[RFC #105](https://github.com/rust-lang/rfcs/pull/105) and
+[RFC #1305](https://github.com/rust-lang/rfcs/pull/1305)
 
 # Unresolved questions
 [unresolved]: #unresolved-questions
 
-What parts of the design are still TBD?
+How to deal with traits that have associated functions on themselves or traits
+in the inherit chain?
+
